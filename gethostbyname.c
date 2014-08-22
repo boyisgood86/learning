@@ -18,6 +18,7 @@
 #define DEBUG(fmt, arg...)	do{//TODO..}while(0)
 #endif /* DEBUG */
 
+// http://www.cnblogs.com/boymgl/articles/1664331.html
 
 /*
    struct hostent {   
