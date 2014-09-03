@@ -25,6 +25,8 @@ enum {
 /* create a json string */
 int create(char * const out)
 {
+
+	/* {"body:{"list:["name1","name2"]","other:{"name":"xiaohui"}"}"} */
 	cJSON *root, *dir1, *dir2, *dir3, *dir4, *dir5;
 	const char *ro = "Root";
 
@@ -39,6 +41,23 @@ int create(char * const out)
 		goto EXIT;
 	}else DEBUG("get root success!\n");
 
+	{
+		cJSON * js_body, *js_list,*js_other;
+
+		const char *const body = "body";
+		const char *const list = "list";
+		const char *const other = "other";
+		const char *const s = "name1";
+		const char *const s1 = "name2";
+		cJSON_AddItemToObject(root, body, js_body=cJSON_CreateObject());
+		cJSON_AddItemToObject(js_body, list, js_list=cJSON_CreateArray());
+		cJSON_AddItemToArray(js_list, cJSON_CreateString(s));
+		cJSON_AddItemToArray(js_list, cJSON_CreateString(s1));
+		cJSON_AddItemToObject(js_body, other, js_other=cJSON_CreateObject());
+		cJSON_AddStringToObject(js_other,"name","xiaohui");
+	}
+
+#if 0
 //	cJSON_AddItemToObject(root,ro,dir1=cJSON_CreateArray());
 	cJSON_AddItemToObject(root,ro,dir1=cJSON_CreateObject());
 	cJSON_AddNumberToObject(dir1,"key",800);
@@ -79,9 +98,11 @@ int create(char * const out)
 
 	cJSON_AddItemToArray(dir3, dir4 );
 #endif
+#endif
 	/* copy json string to out  */
 	{
-		char *s = cJSON_Print(root);
+//		char *s = cJSON_Print(root);
+		char *s = cJSON_PrintUnformatted(root);
 		if(s){
 			strcpy(out, s);
 			free(s);
@@ -163,6 +184,7 @@ int main(int argc, char **argv)
 		}else DEBUG("json string is :\n%s\n",out);
 	}
 
+#if 0
 	/* parsel json string */
 	{
 		int r = 0;
@@ -172,7 +194,7 @@ int main(int argc, char **argv)
 			goto EXIT;
 		}else DEBUG("success !\n");
 	}
-
+#endif
 	free(out);
 	return 0;
 
