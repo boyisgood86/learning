@@ -21,7 +21,6 @@ enum {
 	size = 1024,
 };
 
-#if 0
 
 /* create a json string */
 int create(char * const out)
@@ -50,22 +49,11 @@ int create(char * const out)
 		const char *const s = "name1";
 		const char *const s1 = "name2";
 		cJSON_AddItemToObject(root, body, js_body=cJSON_CreateObject());
-		cJSON_AddStringToObject(js_body,"name","xiaohui");
-		cJSON_AddNumberToObject(js_body,"value",600);
-		{
-		char *s = cJSON_PrintUnformatted(root);
-		if(s){
-			DEBUG("create js string is %s\n",s);
-			free(s);
-		}
-		}
-		cJSON_Delete(root);
-	}
-//		cJSON_AddItemToObject(js_body, list, js_list=cJSON_CreateArray());
-//		cJSON_AddItemToArray(js_list, cJSON_CreateString(s));
-//		cJSON_AddItemToArray(js_list, cJSON_CreateString(s1));
-//		cJSON_AddItemToObject(js_body, other, js_other=cJSON_CreateObject());
-//		cJSON_AddStringToObject(js_other,"name","xiaohui");
+		cJSON_AddItemToObject(js_body, list, js_list=cJSON_CreateArray());
+		cJSON_AddItemToArray(js_list, cJSON_CreateString(s));
+		cJSON_AddItemToArray(js_list, cJSON_CreateString(s1));
+		cJSON_AddItemToObject(js_body, other, js_other=cJSON_CreateObject());
+		cJSON_AddStringToObject(js_other,"name","xiaohui");
 	}
 
 #if 0
@@ -177,35 +165,40 @@ int parsel(const char* const out)
 EXIT:
 	return -1;
 }
-#endif
-int create_js(void)
-{
-	cJSON *root, *js_body, *js_list;
-	root = cJSON_CreateObject();
-	cJSON_AddItemToObject(root,"body", js_body = cJSON_CreateArray());
-	cJSON_AddItemToArray(js_body, js_list = cJSON_CreateObject());
-	cJSON_AddStringToObject(js_list,"name","xiaohui");
-	cJSON_AddNumberToObject(js_list,"status",100);
 
-	{
-		//		char *s = cJSON_Print(root);
-		char *s = cJSON_PrintUnformatted(root);
-		if(s){
-			DEBUG(" %s \n",s);
-			free(s);
-		}
-	}
-	if(root)
-		cJSON_Delete(root);
-
-	return 0;
-EXIT:
-	return -1;
-}
 
 int main(int argc, char **argv)
 {
-	create_js();
+	char *out = (char*)malloc(sizeof(char)*size);
+	if(!out) {
+		DEBUG("malloc out faild!\n");
+		goto EXIT;
+	}
+	/* create json string */
+	{
+		int r = create(out);
+		if(r < 0) {
+			DEBUG("create json string faild..\n");
+			goto EXIT;
+		}else DEBUG("json string is :\n%s\n",out);
+	}
+
+#if 0
+	/* parsel json string */
+	{
+		int r = 0;
+		r = parsel(out);
+		if(r < 0) {
+			DEBUG("parsel faild !\n");
+			goto EXIT;
+		}else DEBUG("success !\n");
+	}
+#endif
+	free(out);
 	return 0;
+
+EXIT:
+	if(out) free(out);
+	return -1;
 }
 

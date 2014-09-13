@@ -29,8 +29,8 @@ typedef struct js_user_list
 typedef struct js_list
 {
 //whitelist	
-	char flag ;
-	char size;
+	char flag ;    /*set YM_ARRY or YM_OBJECT*/
+	char size;	/*array or object count  about list item*/
 
 	js_dev_t *ym_dev;
 	js_user_ls_t *ym_user;
@@ -72,9 +72,9 @@ typedef struct js_head
 /* body */
 typedef struct js_body
 {
-	char list;
-	char user;
-	char other;
+	char list; /*if you care the list item in json string , set 1, or  zero it*/
+	char user; /*if you care the user item in json string, set 1, or zero it*/
+	char other; /*if you care the other item in json string , set 1, or zero it*/
 
 	js_ls_t		ym_list;
 	js_other_t	ym_other;
@@ -86,8 +86,8 @@ typedef struct js_body
 /* root */
 typedef struct js_root
 {
-	char body;
-	char head;
+	char body; /*if you care the body item in json string, set 1, or zero it*/
+	char head; /*if you care the head item in json string, set 1, or zero it*/
 
 	js_head_t ym_head;
 	js_body_t ym_body;
@@ -95,7 +95,9 @@ typedef struct js_root
 	cJSON *root;
 }js_root_t;
 
+/* creat a json string, and put it into js_string*/
 int ym_json_creat(js_root_t *js, char * js_string);
+/*parsel a json string which from js_string, and put the answer into the struct js_root_t*/
 int ym_json_parsel(js_root_t *js, const char * const js_string);
 
 
