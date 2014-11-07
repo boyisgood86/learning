@@ -1,7 +1,10 @@
 #include <iostream>
 #include <string>
+#include "function.h"
 
 using namespace std;
+
+
 
 char &get_val(string &str, string::size_type ix)
 {
@@ -23,3 +26,14 @@ int main()
 	return 0;
 }
 
+
+/*
+ *  error ....
+ */
+#if 0
+int ff(int i = 0)
+{
+
+	return 0;
+}
+#endif
