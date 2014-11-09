@@ -32,6 +32,8 @@ int list_print(Node *pHead)
 {
 	Node *p = pHead;
 //	p = p->pNext;
+	if(!p)
+		goto EXIT;
 	while(p){
 		printf("%d ",p->data);
 		p = p->pNext;
@@ -39,8 +41,33 @@ int list_print(Node *pHead)
 	printf("\n");
 
 	return ok;
+EXIT:
+	return err;
 }
 
+int list_free(Node *pHead)
+{
+	Node * q = pHead;
+	if(!q) {
+		DEBUG("List is null !\n");
+		goto EXIT;
+	}
+	Node *p  = NULL;
+	DEBUG("data = %d\n",q->data);
+
+	while(q) {
+		p = q->pNext;
+		free(q);
+		q = p;
+		if(q)
+		DEBUG("data = %d\n",q->data);
+	}
+
+	q = p = pHead = NULL;
+	return ok;
+EXIT:
+	return err;
+}
 
 Node* list_turn(Node *pHead)
 {
@@ -168,6 +195,10 @@ int main(int argc, char **argv)
 	list_print(head);
 	head = list_turn(head);
 	list_print(head);
+	if(list_free(head) == ok)
+		//free(head);
+	if(list_print(head) == err)
+		DEBUG("printf faild !\n");
 
 	return 0;
 EXIT:
