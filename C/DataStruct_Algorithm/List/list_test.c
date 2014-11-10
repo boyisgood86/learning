@@ -56,11 +56,10 @@ int list_free(Node *pHead)
 	DEBUG("data = %d\n",q->data);
 
 	while(q) {
+		DEBUG("------------------\n");
 		p = q->pNext;
 		free(q);
 		q = p;
-		if(q)
-		DEBUG("data = %d\n",q->data);
 	}
 
 	q = p = pHead = NULL;
@@ -196,9 +195,7 @@ int main(int argc, char **argv)
 	head = list_turn(head);
 	list_print(head);
 	if(list_free(head) == ok)
-		//free(head);
-	if(list_print(head) == err)
-		DEBUG("printf faild !\n");
+		head = NULL;
 
 	return 0;
 EXIT:
