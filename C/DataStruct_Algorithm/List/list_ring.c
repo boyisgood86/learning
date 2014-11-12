@@ -125,6 +125,25 @@ int list_loop_free(Node *pHead, Node *entry_addr)
 	return ok;
 }
 
+Node* list_find_ring_entry_v2(Node *pHead, Node * count)
+{
+	if(!pHead){
+		DEBUG("head is null !\n");
+		return NULL;
+	}
+
+	Node *p = pHead->pNext;
+	Node *q = count;
+
+	while(q != p){
+		q = q->pNext;
+		p = p->pNext;
+	}
+	
+	q = NULL;
+	return p;
+}
+
 Node* list_find_ring_entry(Node *pHead)
 {
 	if(!pHead){
@@ -160,7 +179,7 @@ Node* list_find_ring_entry(Node *pHead)
 }
 
 
-int list_check_ring(Node *pHead)
+int list_check_ring(Node *pHead, Node ** count)
 {
 	if(!pHead){
 		DEBUG("head is null !\n");
@@ -171,10 +190,13 @@ int list_check_ring(Node *pHead)
 	Node *slow = pHead;
 	while(slow){
 		fast = fast->pNext->pNext;
-		if(fast == slow)
+		if(fast == slow){
+			*count = fast;
 			return true;
+		}
 		slow = slow->pNext;
 	}
+
 	return false;
 }
 
@@ -221,7 +243,7 @@ int main(int argc, char **argv)
 	}
 
 	int i = 0;
-	Data data = 0;
+	Data data = 1;
 	for(i = 0; i < 9; i++) {
 		Node * node = (Node*)malloc(sizeof(Node));
 		if(!node) {
@@ -230,7 +252,7 @@ int main(int argc, char **argv)
 		}
 		node->pNext = NULL;
 		node->data = data;
-		data += 2;
+		data += 1;
 
 		list_create(head, node);
 	}
@@ -246,16 +268,27 @@ int main(int argc, char **argv)
 	node->data = 100;
 	
 	list_ring(head, node, 5);
-	if(list_check_ring(head) == true){
+	Node * count = NULL;
+	if(list_check_ring(head, &count) == true){
 		DEBUG("Yes, this list is loop !\n");
 	}else
 		DEBUG("No, this list is not loop !\n");
 	
+	DEBUG("data = [ %d ]\n",count->data);
+
 	Node * entry = list_find_ring_entry(head);
 	if(!entry){
 		DEBUG("Can't find the entry of loop list!\n");
 	}else
-		DEBUG("find over !\n");
+		DEBUG("find over ,data = %d\n",entry->data);
+
+	Node * entry_v2 = list_find_ring_entry_v2(head, count);
+	if(!entry_v2){
+		DEBUG("Can't find the entry of loop list in v2!\n");
+	}else{
+		DEBUG("find over v2, data = %d\n",entry_v2->data);
+	}
+
 
 	list_print_loop(head, entry);
 	if(list_loop_free(head, entry) == ok){
